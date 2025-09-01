@@ -1,55 +1,73 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Dependencies
+node_modules/
+backend/venv/
+backend/__pycache__/
+backend/app/__pycache__/
+backend/app/*/__pycache__/
+backend/app/*/*/__pycache__/
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-.yarn/install-state.gz
+# Environment variables
+.env
+.env.local
+.env.production
+.env.staging
+backend/.env
+backend/.env.local
 
-# testing
-/coverage
+# Database
+backend/portfolio.db
+backend/*.db
 
-# next.js
-/.next/
-/out/
+# Logs
+backend/logs/
+*.log
 
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# local env files
-.env*.local
-.env.local.backup
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# Build outputs
+.next/
+out/
+dist/
+build/
 
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Package manager
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.so
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+.mypy_cache
+.pytest_cache
+.hypothesis
 
-# Custom
-packages.microsoft.gpg
+# Jupyter Notebook
+.ipynb_checkpoints
 
+# pyenv
+.python-version
 
+# Secrets (extra protection)
+*secret*
+*key*
+*token*
+*password*
