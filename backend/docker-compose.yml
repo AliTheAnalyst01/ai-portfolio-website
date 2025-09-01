@@ -1,0 +1,87 @@
+# 🚀 AI Portfolio Backend Docker Compose
+version: '3.8'
+
+services:
+  # AI Portfolio Backend
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=true
+      - ENVIRONMENT=development
+    volumes:
+      - .:/app
+      - ./logs:/app/logs
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    networks:
+      - portfolio-network
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: portfolio
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - portfolio-network
+    restart: unless-stopped
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - portfolio-network
+    restart: unless-stopped
+
+  # Celery Worker (Background Tasks)
+  celery:
+    build: .
+    command: celery -A app.core.celery worker --loglevel=info
+    environment:
+      - DEBUG=true
+      - ENVIRONMENT=development
+    volumes:
+      - .:/app
+    depends_on:
+      - backend
+      - redis
+    networks:
+      - portfolio-network
+    restart: unless-stopped
+
+  # Flower (Celery Monitoring)
+  flower:
+    build: .
+    command: celery -A app.core.celery flower --port=5555
+    ports:
+      - "5555:5555"
+    environment:
+      - DEBUG=true
+      - ENVIRONMENT=development
+    depends_on:
+      - celery
+      - redis
+    networks:
+      - portfolio-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  portfolio-network:
+    driver: bridge
