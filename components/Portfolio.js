@@ -34,6 +34,7 @@ import VisitorPersonalization from './VisitorPersonalization';
 import LoadingSpinner from './LoadingSpinner';
 import EnhancedProjectCard from './EnhancedProjectCard';
 import GitHubIntegration from './GitHubIntegration';
+import HeroSectionCSS from './HeroSectionCSS';
 
 export default function Portfolio() {
   const [projects, setProjects] = useState([]);
@@ -110,8 +111,8 @@ export default function Portfolio() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* Hero Section - Sales Pitch */}
-      <HeroSection />
+      {/* Hero Section - Animated Tech Stack */}
+      <HeroSectionCSS />
       
       {/* Header */}
       <Header 
@@ -748,96 +749,7 @@ function ProjectModal({ selectedProject, onClose, generatedVideos }) {
   );
 }
 
-// Hero Section - Sales Pitch
-function HeroSection() {
-  const handleViewWork = () => {
-    // Scroll to projects section
-    const projectsSection = document.querySelector('[data-section="projects"]');
-    if (projectsSection) {
-      projectsSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
-  const handleGetInTouch = () => {
-    // Open email client with pre-filled message
-    const subject = encodeURIComponent('AI Engineering & Data Science Project Inquiry');
-    const body = encodeURIComponent(`Hi Syed Faizan,
-
-I'm interested in discussing a potential AI/Data Science project with you. 
-
-Project Details:
-- Project Type: 
-- Timeline: 
-- Budget Range: 
-- Description: 
-
-Please let me know your availability for a call.
-
-Best regards,
-[Your Name]`);
-    
-    window.open(`mailto:faizanzaidy78@gmail.com?subject=${subject}&body=${body}`, '_blank');
-  };
-
-  return (
-    <section className="bg-gradient-to-br from-blue-900 via-purple-900 to-gray-900 py-20">
-      <div className="container mx-auto px-4 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Sparkles className="w-12 h-12 text-white" />
-          </div>
-          
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Syed Faizan
-          </h1>
-          
-          <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">
-            AI Engineer & Data Scientist
-          </h2>
-          
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            Transforming businesses with cutting-edge AI solutions. 
-            I build intelligent systems that drive real results and competitive advantage.
-          </p>
-          
-          <div className="flex flex-wrap justify-center gap-6 mb-8">
-            <div className="flex items-center gap-2 bg-blue-600/20 border border-blue-500/30 rounded-full px-4 py-2">
-              <Brain className="w-5 h-5 text-blue-400" />
-              <span className="text-blue-300">Machine Learning</span>
-            </div>
-            <div className="flex items-center gap-2 bg-purple-600/20 border border-purple-500/30 rounded-full px-4 py-2">
-              <Database className="w-5 h-5 text-purple-400" />
-              <span className="text-purple-300">Data Science</span>
-            </div>
-            <div className="flex items-center gap-2 bg-green-600/20 border border-green-500/30 rounded-full px-4 py-2">
-              <Cpu className="w-5 h-5 text-green-400" />
-              <span className="text-green-300">AI Engineering</span>
-            </div>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button 
-              onClick={handleViewWork}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 transform hover:scale-105"
-            >
-              View My Work
-            </button>
-            <button 
-              onClick={handleGetInTouch}
-              className="border border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300"
-            >
-              Get In Touch
-            </button>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
 
 // Value Proposition Component
 function ValueProposition() {

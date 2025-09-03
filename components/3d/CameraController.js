@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { Vector3 } from 'three';
 
 export default function CameraController({ 
   selectedProject, 
@@ -10,15 +10,15 @@ export default function CameraController({
   projects 
 }) {
   const { camera } = useThree();
-  const targetPosition = useRef(new THREE.Vector3());
-  const targetLookAt = useRef(new THREE.Vector3());
+  const targetPosition = useRef(new Vector3());
+  const targetLookAt = useRef(new Vector3());
   const isTransitioning = useRef(false);
   const transitionStartTime = useRef(0);
   const transitionDuration = 2000; // 2 seconds
 
   // Default camera position
-  const defaultPosition = new THREE.Vector3(0, 5, 20);
-  const defaultLookAt = new THREE.Vector3(0, 0, 0);
+  const defaultPosition = new Vector3(0, 5, 20);
+  const defaultLookAt = new Vector3(0, 0, 0);
 
   // Handle project selection
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function CameraController({
       );
       
       // Interpolate camera look-at target
-      const currentLookAt = new THREE.Vector3();
+      const currentLookAt = new Vector3();
       camera.getWorldDirection(currentLookAt);
       currentLookAt.multiplyScalar(10).add(camera.position);
       

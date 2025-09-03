@@ -3,7 +3,7 @@
 import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useThree } from '@react-three/fiber';
-import * as THREE from 'three';
+import { Color, PCFSoftShadowMap } from 'three';
 
 export default function Lights({ visitorType }) {
   const { scene } = useThree();
@@ -69,7 +69,7 @@ export default function Lights({ visitorType }) {
       
       // Color cycling for point light
       const hue = (time * 0.1) % 1;
-      const color = new THREE.Color().setHSL(hue, 0.7, 0.6);
+      const color = new Color().setHSL(hue, 0.7, 0.6);
       pointLightRef.current.color = color;
     }
 
@@ -88,7 +88,7 @@ export default function Lights({ visitorType }) {
     const renderer = scene.getObjectByProperty('type', 'WebGLRenderer');
     if (renderer) {
       renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.shadowMap.type = PCFSoftShadowMap;
     }
     return true;
   }, [scene]);

@@ -3,7 +3,7 @@
 import React, { useRef, useMemo, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Text, Box, Html } from '@react-three/drei';
-import * as THREE from 'three';
+import { Color, Vector3 } from 'three';
 
 export default function ProjectCard3D({
   project,
@@ -47,7 +47,7 @@ export default function ProjectCard3D({
     const baseColor = colors[project.analysis?.projectCategory || 'other'];
     const intensity = isHovered ? 1.2 : isSelected ? 1.5 : 1;
     
-    return new THREE.Color(baseColor).multiplyScalar(intensity);
+    return new Color(baseColor).multiplyScalar(intensity);
   }, [project.analysis?.projectCategory, isHovered, isSelected]);
 
   // Animate card floating and rotation
@@ -64,7 +64,7 @@ export default function ProjectCard3D({
       
       // Scale animation on hover
       const targetScale = isHovered ? 1.1 : isSelected ? 1.2 : 1;
-      groupRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.1);
+      groupRef.current.scale.lerp(new Vector3(targetScale, targetScale, targetScale), 0.1);
     }
   });
 

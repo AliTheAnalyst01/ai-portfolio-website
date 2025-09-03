@@ -2,7 +2,7 @@
 
 import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { Color, BufferGeometry, BufferAttribute, AdditiveBlending } from 'three';
 
 export default function ParticleSystem({ 
   count = 200, 
@@ -31,7 +31,7 @@ export default function ParticleSystem({
       positions[i * 3 + 2] = radius * Math.cos(phi);
 
       // Random colors
-      const color = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
+      const color = new Color(colors[Math.floor(Math.random() * colors.length)]);
       colors_array[i * 3] = color.r;
       colors_array[i * 3 + 1] = color.g;
       colors_array[i * 3 + 2] = color.b;
@@ -50,10 +50,10 @@ export default function ParticleSystem({
 
   // Create geometry and material
   const geometry = useMemo(() => {
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(particles.positions, 3));
-    geo.setAttribute('color', new THREE.BufferAttribute(particles.colors, 3));
-    geo.setAttribute('size', new THREE.BufferAttribute(particles.sizes, 1));
+    const geo = new BufferGeometry();
+    geo.setAttribute('position', new BufferAttribute(particles.positions, 3));
+    geo.setAttribute('color', new BufferAttribute(particles.colors, 3));
+    geo.setAttribute('size', new BufferAttribute(particles.sizes, 1));
     return geo;
   }, [particles]);
 
@@ -114,7 +114,7 @@ export default function ParticleSystem({
         transparent
         opacity={0.8}
         sizeAttenuation
-        blending={THREE.AdditiveBlending}
+        blending={AdditiveBlending}
         depthWrite={false}
       />
     </points>
