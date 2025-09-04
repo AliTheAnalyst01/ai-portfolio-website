@@ -10,7 +10,7 @@ export default function GitHubIntegration({ onRepositoriesFetched }) {
   const [success, setSuccess] = useState(false);
   const [stats, setStats] = useState(null);
 
-  const username = 'AliTheAnalyst01'; // Your actual GitHub username
+  const username = process.env.NEXT_PUBLIC_GITHUB_USERNAME || 'AliTheAnalyst01';
 
   const fetchRepositories = async () => {
     setIsLoading(true);
