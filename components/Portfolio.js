@@ -35,6 +35,7 @@ import LoadingSpinner from './LoadingSpinner';
 import EnhancedProjectCard from './EnhancedProjectCard';
 import GitHubIntegration from './GitHubIntegration';
 import HeroSectionCSS from './HeroSectionCSS';
+import backendAPI from '@/lib/backend-api';
 
 export default function Portfolio() {
   const [projects, setProjects] = useState([]);
@@ -49,11 +50,66 @@ export default function Portfolio() {
   const [visitorType, setVisitorType] = useState('general');
   const [generatedVideos, setGeneratedVideos] = useState({});
   const [showContactForm, setShowContactForm] = useState(false);
+  const [backendConnected, setBackendConnected] = useState(false);
+  const [aiAnalysisEnabled, setAiAnalysisEnabled] = useState(false);
 
   // Handle repositories fetched from GitHub
-  const handleRepositoriesFetched = (repositories) => {
+  const handleRepositoriesFetched = async (repositories) => {
     setProjects(repositories);
     setFilteredProjects(repositories);
+    
+    // Check backend connection and enable AI analysis
+    try {
+      await backendAPI.testConnection();
+      setBackendConnected(true);
+      setAiAnalysisEnabled(true);
+      console.log('✅ Backend connected! AI analysis enabled.');
+      
+      // Enhance projects with AI analysis
+      await enhanceProjectsWithAI(repositories);
+    } catch (error) {
+      console.warn('⚠️ Backend not available, using fallback analysis:', error);
+      setBackendConnected(false);
+      setAiAnalysisEnabled(false);
+    }
+  };
+
+  // Enhance projects with AI analysis from backend
+  const enhanceProjectsWithAI = async (repositories) => {
+    try {
+      const enhancedProjects = await Promise.all(
+        repositories.map(async (project) => {
+          try {
+            const aiAnalysis = await backendAPI.analyzeProject(project);
+            return {
+              ...project,
+              ai_analysis: aiAnalysis.ai_analysis,
+              complexity_score: aiAnalysis.complexity_score,
+              tech_stack: aiAnalysis.tech_stack,
+              recommendations: aiAnalysis.recommendations,
+              image_url: aiAnalysis.image_url,
+              enhanced: true
+            };
+          } catch (error) {
+            console.warn(`Failed to analyze project ${project.name}:`, error);
+            return {
+              ...project,
+              ai_analysis: `This is a ${project.language || 'software'} project with ${project.stargazers_count || 0} stars.`,
+              complexity_score: Math.min(5, Math.floor((project.stargazers_count || 0) / 10)),
+              tech_stack: project.language ? [project.language] : [],
+              recommendations: [],
+              image_url: 'https://via.placeholder.com/400x300?text=Project+Image',
+              enhanced: false
+            };
+          }
+        })
+      );
+      
+      setProjects(enhancedProjects);
+      setFilteredProjects(enhancedProjects);
+    } catch (error) {
+      console.error('Error enhancing projects with AI:', error);
+    }
   };
 
   // Initialize with empty projects - will be populated by GitHub integration
@@ -159,6 +215,30 @@ export default function Portfolio() {
               {/* GitHub Integration */}
               <div className="mb-8">
                 <GitHubIntegration onRepositoriesFetched={handleRepositoriesFetched} />
+              </div>
+
+              {/* Backend Status Indicator */}
+              <div className="mb-6">
+                <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${
+                  backendConnected 
+                    ? 'bg-green-100 text-green-800 border border-green-200' 
+                    : 'bg-yellow-100 text-yellow-800 border border-yellow-200'
+                }`}>
+                  <div className={`w-2 h-2 rounded-full mr-2 ${
+                    backendConnected ? 'bg-green-500' : 'bg-yellow-500'
+                  }`}></div>
+                  {backendConnected ? (
+                    <>
+                      <Brain className="w-4 h-4 mr-1" />
+                      AI Agent Connected - Enhanced Analysis Active
+                    </>
+                  ) : (
+                    <>
+                      <Cpu className="w-4 h-4 mr-1" />
+                      AI Agent Offline - Using Basic Analysis
+                    </>
+                  )}
+                </div>
               </div>
 
               {/* Projects Display */}
