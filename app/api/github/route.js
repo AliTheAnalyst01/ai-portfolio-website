@@ -30,13 +30,9 @@ export async function GET(request) {
       );
     }
 
-    if (!process.env.GITHUB_TOKEN) {
-      console.error('No GitHub token found');
-      return NextResponse.json(
-        { error: 'GitHub token not configured' },
-        { status: 500 }
-      );
-    }
+    // For now, let's use a public API approach without authentication
+    // This will work for public repositories
+    console.log('Using public GitHub API (no authentication)');
 
     console.log(`Fetching repositories for username: ${username}`);
 
@@ -45,15 +41,20 @@ export async function GET(request) {
     const timeoutId = setTimeout(() => controller.abort(), 20000); // 20 second timeout
 
     try {
-      const { data: repositories } = await octokit.repos.listForUser({
-        username,
-        type: 'owner',
-        sort: 'updated',
-        per_page: 100,
-        request: {
-          signal: controller.signal,
-        },
+      // Use public GitHub API without authentication
+      const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100&type=owner`, {
+        signal: controller.signal,
+        headers: {
+          'Accept': 'application/vnd.github.v3+json',
+          'User-Agent': 'ai-portfolio-website'
+        }
       });
+      
+      if (!response.ok) {
+        throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+      }
+      
+      const repositories = await response.json();
 
       clearTimeout(timeoutId);
 
