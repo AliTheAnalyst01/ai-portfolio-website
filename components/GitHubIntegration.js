@@ -11,6 +11,13 @@ export default function GitHubIntegration({ onRepositoriesFetched }) {
   const [stats, setStats] = useState(null);
 
   const username = process.env.NEXT_PUBLIC_GITHUB_USERNAME || 'AliTheAnalyst01';
+  
+  // Debug logging
+  console.log('GitHub Integration Debug:', {
+    envUsername: process.env.NEXT_PUBLIC_GITHUB_USERNAME,
+    finalUsername: username,
+    nodeEnv: process.env.NODE_ENV
+  });
 
   const fetchRepositories = async () => {
     setIsLoading(true);
