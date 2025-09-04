@@ -15,10 +15,26 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const username = searchParams.get('username') || process.env.NEXT_PUBLIC_GITHUB_USERNAME;
     
+    console.log('GitHub API Debug:', {
+      username,
+      hasToken: !!process.env.GITHUB_TOKEN,
+      tokenLength: process.env.GITHUB_TOKEN?.length,
+      nodeEnv: process.env.NODE_ENV
+    });
+    
     if (!username) {
+      console.error('No username provided');
       return NextResponse.json(
         { error: 'GitHub username is required' },
         { status: 400 }
+      );
+    }
+
+    if (!process.env.GITHUB_TOKEN) {
+      console.error('No GitHub token found');
+      return NextResponse.json(
+        { error: 'GitHub token not configured' },
+        { status: 500 }
       );
     }
 
